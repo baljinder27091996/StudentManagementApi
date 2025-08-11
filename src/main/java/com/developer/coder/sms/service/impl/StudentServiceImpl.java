@@ -1,96 +1,98 @@
 package com.developer.coder.sms.service.impl;
+
+import com.developer.coder.sms.dto.Addressdto;
 import com.developer.coder.sms.dto.Studentdto;
+import com.developer.coder.sms.entity.Address;
 import com.developer.coder.sms.entity.Student;
-import com.developer.coder.sms.exception.DuplicateResourceException;
-import com.developer.coder.sms.exception.InvalidInputException;
-import com.developer.coder.sms.mapper.StudentMapper;
+import com.developer.coder.sms.repository.AddressRepository;
 import com.developer.coder.sms.repository.StudentInterface;
 import com.developer.coder.sms.service.Studentservice;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import com.developer.coder.sms.exception.ResourceNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
+@Transactional
+public class StudentServiceImpl implements Studentservice {
 
-public class StudentServiceImpl implements Studentservice{
+    private final StudentInterface studentRepo;
+    private final AddressRepository addressRepo;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private StudentInterface studentrepository;
-
-
+    public StudentServiceImpl(StudentInterface studentRepo, AddressRepository addressRepo, ModelMapper modelMapper) {
+        this.studentRepo = studentRepo;
+        this.addressRepo = addressRepo;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
-    public Studentdto createStudent(Studentdto studentdto)
-    {
-        Student student= StudentMapper.maptoStudent(studentdto);
-        Student savedStudent=studentrepository.save(student);
-
-        return StudentMapper.maptoStudentdto(savedStudent);
-
-    }
-    @Override
-    public Studentdto createStudentifEXCEPTION(Studentdto studentdto) {
-        if (studentdto.getRollNo() <= 0) {
-            throw new InvalidInputException("Roll number must be greater than zero");
+    public Studentdto createStudent(Studentdto studentdto) {
+        if (studentRepo.existsByRollNumber(studentdto.getRollNo())) {
+            throw new RuntimeException("Roll number already exists");
         }
-        if (studentrepository.existsByRollNumber(studentdto.getRollNo())) {
-            throw new DuplicateResourceException("Student with roll number already exists");
-        }
-
-        Student student = StudentMapper.maptoStudent(studentdto);
-        return StudentMapper.maptoStudentdto(studentrepository.save(student));
+        Student student = modelMapper.map(studentdto, Student.class);
+        student = studentRepo.save(student);
+        return modelMapper.map(student, Studentdto.class);
     }
+
     @Override
     public List<Studentdto> getAllStudents() {
-        return studentrepository.findAll()
-                .stream()
-                .map(StudentMapper::maptoStudentdto) // assuming you have a mapper
+        return studentRepo.findAll().stream()
+                .map(student -> modelMapper.map(student, Studentdto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Studentdto getStudentById(Integer id) {
-        Student student = studentrepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
-        return StudentMapper.maptoStudentdto(student);
+        Student student = studentRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
+        return modelMapper.map(student, Studentdto.class);
     }
 
     @Override
     public Studentdto updateStudent(Integer id, Studentdto studentdto) {
-        Student existingStudent = studentrepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
+        Student existing = studentRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+        existing.setName(studentdto.getName());
+        existing.setRollNumber(studentdto.getRollNo());
+        existing.setClassName(studentdto.getClassname());
 
-        existingStudent.setRollNumber(studentdto.getRollNo());
+        if (studentdto.getAddress() != null) {
+            Address address = modelMapper.map(studentdto.getAddress(), Address.class);
+            existing.setAddress(address);
+        }
 
-        existingStudent.setName(studentdto.getName());
-
-        existingStudent.setClassName(studentdto.getClassname());
-
-        Student updatedStudent = studentrepository.save(existingStudent);
-        return StudentMapper.maptoStudentdto(updatedStudent);
-    }
-
-    @Override
-
-    public Studentdto Updateaddress(Integer id, Studentdto studentdto) {
-        Student existingStudent = studentrepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
-
-        existingStudent.setRollNumber(studentdto.getRollNo());
-        existingStudent.setName(studentdto.getName());
-        existingStudent.setClassName(studentdto.getClassname());
-        existingStudent.setAddress(StudentMapper.maptoStudent(studentdto).getAddress()); // ✅ handle Address
-
-        Student updatedStudent = studentrepository.save(existingStudent);
-        return StudentMapper.maptoStudentdto(updatedStudent);
+        Student updated = studentRepo.save(existing);
+        return modelMapper.map(updated, Studentdto.class);
     }
 
     @Override
     public void deleteStudent(Integer id) {
-        Student student = studentrepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
-        studentrepository.delete(student);
+        studentRepo.deleteById(id);
     }
 
+    @Override
+    public Studentdto createStudentifEXCEPTION(Studentdto studentdto) {
+        try {
+            return createStudent(studentdto);
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating student: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Studentdto updateAddress(int id, Addressdto addressDto) {
+        Student existing = studentRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        Address address = modelMapper.map(addressDto, Address.class);
+        existing.setAddress(address);
+        addressRepo.save(address);
+
+        Student updated = studentRepo.save(existing);
+        return modelMapper.map(updated, Studentdto.class);
+    }
 }

@@ -1,48 +1,56 @@
 package com.developer.coder.sms.controller;
-
+import com.developer.coder.sms.dto.Addressdto;
 import com.developer.coder.sms.entity.Address;
-import com.developer.coder.sms.repository.AddressRepository;
+import com.developer.coder.sms.exception.ResourceNotFoundException;
+import com.developer.coder.sms.service.AddressService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.List;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/addresses")
+@RequestMapping("/api/address")
 public class AddressController {
 
-    private final AddressRepository addressRepository;
+    private AddressService addressService;
 
-    public AddressController(AddressRepository addressRepository) {
-        this.addressRepository = addressRepository;
+    public AddressController(AddressService addressService) {
+        this.addressService = addressService;
     }
 
+    // CREATE
     @PostMapping
-    public Address createAddress(@RequestBody Address address) {
-        return addressRepository.save(address);
+    public ResponseEntity<Address> createAddress(@RequestBody Addressdto addressDTO) {
+        Address savedAddress = addressService.createAddress(addressDTO);
+        return new ResponseEntity<>(savedAddress, HttpStatus.CREATED);
     }
 
+    // READ ALL
     @GetMapping
-    public List<Address> getAllAddresses() {
-        return addressRepository.findAll();
+    public ResponseEntity<List<Address>> getAllAddresses() {
+        return ResponseEntity.ok(addressService.getAllAddresses());
     }
 
+    // READ BY ID
     @GetMapping("/{id}")
-    public Address getAddressById(@PathVariable int id) {
-        return addressRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Address not found"));
+    public ResponseEntity<Address> getAddressById(@PathVariable Integer id) {
+        Address address = addressService.getAddressById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found with id: " + id));
+        return ResponseEntity.ok(address);
     }
 
+    // UPDATE
     @PutMapping("/{id}")
-    public Address updateAddress(@PathVariable int id, @RequestBody Address updatedAddress) {
-        Address address = getAddressById(id);
-        address.setStreet(updatedAddress.getStreet());
-        address.setCity(updatedAddress.getCity());
-        address.setState(updatedAddress.getState());
-        return addressRepository.save(address);
+    public ResponseEntity<Address> updateAddress(@PathVariable  Integer id, @RequestBody Addressdto addressDTO) {
+        Address updatedAddress = addressService.updateAddress(id, addressDTO);
+        return ResponseEntity.ok(updatedAddress);
     }
 
+    // DELETE
     @DeleteMapping("/{id}")
-    public void deleteAddress(@PathVariable int id) {
-        addressRepository.deleteById(id);
+    public ResponseEntity<String> deleteAddress(@PathVariable Integer id) {
+        addressService.deleteAddress(id);
+        return ResponseEntity.ok("Address deleted successfully");
     }
 }

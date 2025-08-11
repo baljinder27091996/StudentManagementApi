@@ -1,26 +1,32 @@
 package com.developer.coder.sms.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Data
-@Table(name="student")
+@Table(name = "student")
 public class Student {
+
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="rollno",unique=true)
+    @Column(name = "rollno", unique = true)
     private int rollNumber;
-    @Column(name="name")
+
+    @Column(name = "name")
     private String name;
 
-    @Column(name="classname")
+    @Column(name = "classname")
     private String className;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
@@ -28,44 +34,18 @@ public class Student {
     public Student() {
     }
 
-    public Student(int id, int rollNumber, String name, String className) {
+    public Student(int id,
+                   @NotNull(message = "Roll number is required")
+                   @Positive(message = "Roll number must be positive") int rollNo,
+                   @NotBlank(message = "Name is mandatory")
+                   @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters") String name,
+                   @NotBlank(message = "Class name is mandatory") String classname,
+                   Address address) {
         this.id = id;
-        this.rollNumber = rollNumber;
+        this.rollNumber = rollNo;
         this.name = name;
-        this.className = className;
-
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getRollNumber() {
-        return rollNumber;
-    }
-
-    public void setRollNumber(int rollNumber) {
-        this.rollNumber = rollNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
+        this.className = classname;
+        this.address = address;
     }
 
     @Override
@@ -75,6 +55,7 @@ public class Student {
                 ", rollNumber=" + rollNumber +
                 ", name='" + name + '\'' +
                 ", className='" + className + '\'' +
+                ", address=" + address +
                 '}';
     }
 }

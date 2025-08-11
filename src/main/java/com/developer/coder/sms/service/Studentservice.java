@@ -1,4 +1,5 @@
 package com.developer.coder.sms.service;
+import com.developer.coder.sms.dto.Addressdto;
 import com.developer.coder.sms.dto.Studentdto;
 import com.developer.coder.sms.entity.Student;
 
@@ -10,6 +11,6 @@ public interface Studentservice {
         Studentdto updateStudent(Integer id, Studentdto studentdto);
         void deleteStudent(Integer id);
         Studentdto createStudentifEXCEPTION(Studentdto studentdto);
-        Student Updateaddress(int id, Student student);
+        Studentdto updateAddress(int id, Addressdto addressDto);
 
 }

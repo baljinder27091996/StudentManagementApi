@@ -5,20 +5,29 @@ import com.developer.coder.sms.entity.Student;
 
 public class StudentMapper {
 
-    public static com.developer.coder.sms.dto.Studentdto maptoStudentdto(Student student) {
+    public static Studentdto mapToStudentDto(Student student) {
+        if (student == null) {
+            return null;
+        }
         return new Studentdto(
                 student.getId(),
                 student.getRollNumber(),
                 student.getName(),
-                student.getClassName()
+                student.getClassName(),
+                AddressMapper.mapToAddressDto(student.getAddress()) // ✅ include address
         );
-
     }
-    public static Student maptoStudent(Studentdto studentdto){
-    return new Student(
-            studentdto.getId(),
-            studentdto.getRollNo(),
-            studentdto.getName(),
-            studentdto.getClassname()
-    );}
+
+    public static Student mapToStudent(Studentdto studentdto) {
+        if (studentdto == null) {
+            return null;
+        }
+        return new Student(
+                studentdto.getId(),
+                studentdto.getRollNo(),
+                studentdto.getName(),
+                studentdto.getClassname(),
+                AddressMapper.mapToAddress(studentdto.getAddress()) // ✅ include address
+        );
+    }
 }

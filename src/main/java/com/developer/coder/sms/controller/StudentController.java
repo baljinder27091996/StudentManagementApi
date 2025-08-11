@@ -1,6 +1,7 @@
 package com.developer.coder.sms.controller;
 
 import com.developer.coder.sms.dto.Studentdto;
+import com.developer.coder.sms.entity.Student;
 import com.developer.coder.sms.service.Studentservice;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +18,16 @@ public class StudentController {
     @Autowired
     private Studentservice  studentService;
     //build add student id rest api
-    @PostMapping("/")
-    public ResponseEntity<Studentdto> createStudent(@Valid @RequestBody Studentdto studentdto){
-       Studentdto savedstudent=studentService.createStudent(studentdto);
-       return new ResponseEntity<>(savedstudent, HttpStatus.CREATED);
-    }
-
     //@GetMapping("/")
     //public String helloWorld(){
        // return "Hello World";
     //}
+    @PostMapping
+    public ResponseEntity<Studentdto> createStudent(@Valid @RequestBody Studentdto studentdto) {
+        Studentdto savedStudent = studentService.createStudent(studentdto);
+        return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
+    }
+
     @GetMapping("/")
     public ResponseEntity<List<Studentdto>> getAllStudents() {
         List<Studentdto> students = studentService.getAllStudents();
