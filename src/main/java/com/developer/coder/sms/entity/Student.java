@@ -2,6 +2,8 @@ package com.developer.coder.sms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+
 @Getter
 @Setter
 @Entity
@@ -19,6 +21,9 @@ public class Student {
 
     @Column(name="classname")
     private String className;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
 
     public Student() {
     }
@@ -28,6 +33,7 @@ public class Student {
         this.rollNumber = rollNumber;
         this.name = name;
         this.className = className;
+
     }
 
     public int getId() {

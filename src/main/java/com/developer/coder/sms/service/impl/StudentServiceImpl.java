@@ -72,6 +72,21 @@ public class StudentServiceImpl implements Studentservice{
     }
 
     @Override
+
+    public Studentdto Updateaddress(Integer id, Studentdto studentdto) {
+        Student existingStudent = studentrepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
+
+        existingStudent.setRollNumber(studentdto.getRollNo());
+        existingStudent.setName(studentdto.getName());
+        existingStudent.setClassName(studentdto.getClassname());
+        existingStudent.setAddress(StudentMapper.maptoStudent(studentdto).getAddress()); // ✅ handle Address
+
+        Student updatedStudent = studentrepository.save(existingStudent);
+        return StudentMapper.maptoStudentdto(updatedStudent);
+    }
+
+    @Override
     public void deleteStudent(Integer id) {
         Student student = studentrepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
