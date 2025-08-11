@@ -6,26 +6,25 @@ import com.developer.coder.sms.entity.Address;
 public class AddressMapper {
 
     public static Addressdto mapToAddressDto(Address address) {
-        if (address == null) {
-            return null;
-        }
+        if (address == null) return null;
         return new Addressdto(
+                address.getId(),
                 address.getStreet(),
                 address.getCity(),
                 address.getState(),
-                address.getZip() // ✅ matches entity
+                address.getZip()
         );
     }
 
     public static Address mapToAddress(Addressdto addressDto) {
-        if (addressDto == null) {
-            return null;
-        }
-        return new Address(
+        if (addressDto == null) return null;
+        Address address = new Address(
                 addressDto.getstreet(),
                 addressDto.getcity(),
                 addressDto.getstate(),
-                addressDto.getzipcode() // ✅ matches DTO
+                addressDto.getzipcode()
         );
+        address.setId(addressDto.getId());
+        return address;
     }
 }

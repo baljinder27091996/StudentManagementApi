@@ -1,8 +1,8 @@
 package com.developer.coder.sms.controller;
+
 import com.developer.coder.sms.dto.Addressdto;
-import com.developer.coder.sms.entity.Address;
-import com.developer.coder.sms.exception.ResourceNotFoundException;
 import com.developer.coder.sms.service.AddressService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,44 +13,44 @@ import java.util.List;
 @RequestMapping("/api/address")
 public class AddressController {
 
-    private AddressService addressService;
+    private final AddressService addressService;
 
     public AddressController(AddressService addressService) {
         this.addressService = addressService;
     }
 
-    // CREATE
+    // ✅ Create new address
     @PostMapping
-    public ResponseEntity<Address> createAddress(@RequestBody Addressdto addressDTO) {
-        Address savedAddress = addressService.createAddress(addressDTO);
+    public ResponseEntity<Addressdto> createAddress(@Valid @RequestBody Addressdto addressDto) {
+        Addressdto savedAddress = addressService.createAddress(addressDto);
         return new ResponseEntity<>(savedAddress, HttpStatus.CREATED);
     }
 
-    // READ ALL
+    // ✅ Get all addresses
     @GetMapping
-    public ResponseEntity<List<Address>> getAllAddresses() {
+    public ResponseEntity<List<Addressdto>> getAllAddresses() {
         return ResponseEntity.ok(addressService.getAllAddresses());
     }
 
-    // READ BY ID
+    // ✅ Get a single address by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Address> getAddressById(@PathVariable Integer id) {
-        Address address = addressService.getAddressById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Address not found with id: " + id));
-        return ResponseEntity.ok(address);
+    public ResponseEntity<Addressdto> getAddressById(@PathVariable Integer id) {
+        return ResponseEntity.ok(addressService.getAddressById(id));
     }
 
-    // UPDATE
+    // ✅ Update address by ID
     @PutMapping("/{id}")
-    public ResponseEntity<Address> updateAddress(@PathVariable  Integer id, @RequestBody Addressdto addressDTO) {
-        Address updatedAddress = addressService.updateAddress(id, addressDTO);
-        return ResponseEntity.ok(updatedAddress);
+    public ResponseEntity<Addressdto> updateAddress(
+            @PathVariable Integer id,
+            @Valid @RequestBody Addressdto addressDto) {
+
+        return ResponseEntity.ok(addressService.updateAddress(id, addressDto));
     }
 
-    // DELETE
+    // ✅ Delete address by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAddress(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteAddress(@PathVariable Integer id) {
         addressService.deleteAddress(id);
-        return ResponseEntity.ok("Address deleted successfully");
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,5 +1,5 @@
 package com.developer.coder.sms.dto;
-
+import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -26,7 +26,7 @@ public class Studentdto {
     @NotBlank(message = "Class name is mandatory")
     private String classname;
 
-    private Addressdto address; // ✅ One-to-One relationship
+    private List<Addressdto> addresses; // ✅ One-to-Many relationship
 
     @Override
     public String toString() {
@@ -35,7 +35,7 @@ public class Studentdto {
                 ", rollNo=" + rollNo +
                 ", name='" + name + '\'' +
                 ", classname='" + classname + '\'' +
-                ", address=" + address +
+                ", addresses=" + addresses +
                 '}';
     }
 }

@@ -10,6 +10,7 @@ import lombok.*;
 @ToString
 @Data
 public class Addressdto {
+    private Integer id;
     @NotBlank(message = "Street is required")
     private String street;
 
@@ -21,6 +22,9 @@ public class Addressdto {
 
     @NotBlank(message = "Zipcode is required")
     private String zipcode;
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getstreet() {
         return street;

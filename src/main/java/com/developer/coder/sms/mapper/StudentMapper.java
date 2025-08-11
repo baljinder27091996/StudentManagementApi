@@ -2,6 +2,9 @@ package com.developer.coder.sms.mapper;
 
 import com.developer.coder.sms.dto.Studentdto;
 import com.developer.coder.sms.entity.Student;
+import com.developer.coder.sms.entity.Address;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class StudentMapper {
 
@@ -14,7 +17,12 @@ public class StudentMapper {
                 student.getRollNumber(),
                 student.getName(),
                 student.getClassName(),
-                AddressMapper.mapToAddressDto(student.getAddress()) // ✅ include address
+                student.getAddresses() != null
+                        ? student.getAddresses()
+                        .stream()
+                        .map(AddressMapper::mapToAddressDto)
+                        .collect(Collectors.toList())
+                        : null
         );
     }
 
@@ -22,12 +30,26 @@ public class StudentMapper {
         if (studentdto == null) {
             return null;
         }
-        return new Student(
+
+        Student student = new Student(
                 studentdto.getId(),
                 studentdto.getRollNo(),
                 studentdto.getName(),
                 studentdto.getClassname(),
-                AddressMapper.mapToAddress(studentdto.getAddress()) // ✅ include address
+                null
         );
+
+        if (studentdto.getAddresses() != null) {
+            List<Address> addresses = studentdto.getAddresses()
+                    .stream()
+                    .map(AddressMapper::mapToAddress)
+                    .collect(Collectors.toList());
+
+            // Maintain bidirectional relationship
+            addresses.forEach(addr -> addr.setStudent(student));
+            student.setAddresses(addresses);
+        }
+
+        return student;
     }
 }

@@ -1,5 +1,6 @@
 package com.developer.coder.sms.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,12 +16,20 @@ public class Address {
     private String state;
     private String zip;
 
-    // Optional bi-directional back-link; hide from JSON to avoid recursion
-    @OneToOne(mappedBy = "address")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id")
+    @JsonBackReference // Prevents infinite loop during JSON serialization
     private Student student;
+
     public Address() {
     }
-    public Address(String getstreet, String getcity, String getstate, String getzipcode) {}
+
+    public Address(String street, String city, String state, String zip) {
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
+    }
 
     // Getters and setters
     public Integer getId() { return id; }

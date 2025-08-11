@@ -5,12 +5,11 @@ import com.developer.coder.sms.dto.Addressdto;
 import com.developer.coder.sms.entity.Address;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AddressService {
-    Address createAddress(Addressdto addressDTO);
-    List<Address> getAllAddresses();
-    Optional<Address> getAddressById(Integer id);
-    Address updateAddress(  Integer id, Addressdto addressDTO);
+    Addressdto createAddress(Addressdto addressDto);
+    List<Addressdto> getAllAddresses();
+    Addressdto getAddressById(Integer id);
+    Addressdto updateAddress(Integer id, Addressdto addressDto);
     void deleteAddress(Integer id);
 }

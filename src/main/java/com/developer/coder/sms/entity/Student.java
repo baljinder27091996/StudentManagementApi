@@ -8,6 +8,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -27,9 +30,9 @@ public class Student {
     @Column(name = "classname")
     private String className;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
 
     public Student() {
     }
@@ -40,12 +43,21 @@ public class Student {
                    @NotBlank(message = "Name is mandatory")
                    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters") String name,
                    @NotBlank(message = "Class name is mandatory") String classname,
-                   Address address) {
+                   List<Address> addresses) {
         this.id = id;
         this.rollNumber = rollNo;
         this.name = name;
         this.className = classname;
-        this.address = address;
+        this.addresses = addresses;
+    }
+    public void addAddress(Address address) {
+        addresses.add(address);
+        address.setStudent(this);
+    }
+
+    public void removeAddress(Address address) {
+        addresses.remove(address);
+        address.setStudent(null);
     }
 
     @Override
@@ -55,7 +67,7 @@ public class Student {
                 ", rollNumber=" + rollNumber +
                 ", name='" + name + '\'' +
                 ", className='" + className + '\'' +
-                ", address=" + address +
+                ", addresses=" + addresses +
                 '}';
     }
 }
