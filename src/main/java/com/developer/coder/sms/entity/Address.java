@@ -15,14 +15,12 @@ public class Address {
     private String state;
     private String zip;
 
-    // Optional bi-directional back-link; hide from JSON to avoid recursion
     @OneToOne(mappedBy = "address")
     private Student student;
     public Address() {
     }
     public Address(String getstreet, String getcity, String getstate, String getzipcode) {}
 
-    // Getters and setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

@@ -26,7 +26,7 @@ public class Studentdto {
     @NotBlank(message = "Class name is mandatory")
     private String classname;
 
-    private Addressdto address; // ✅ One-to-One relationship
+    private Addressdto address;
 
     @Override
     public String toString() {

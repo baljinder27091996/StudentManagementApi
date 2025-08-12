@@ -1,7 +1,12 @@
 package com.developer.coder.sms.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+import lombok.Data;
 
 @Getter
 @Setter
@@ -10,6 +15,7 @@ import lombok.*;
 @ToString
 @Data
 public class Addressdto {
+
     @NotBlank(message = "Street is required")
     private String street;
 
@@ -53,6 +59,4 @@ public class Addressdto {
     public void setZipCode(String zipcode) {
         this.zipcode = zipcode;
     }
-
-
 }

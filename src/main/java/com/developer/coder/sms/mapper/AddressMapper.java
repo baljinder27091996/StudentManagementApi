@@ -13,7 +13,7 @@ public class AddressMapper {
                 address.getStreet(),
                 address.getCity(),
                 address.getState(),
-                address.getZip() // ✅ matches entity
+                address.getZip()
         );
     }
 
@@ -25,7 +25,7 @@ public class AddressMapper {
                 addressDto.getstreet(),
                 addressDto.getcity(),
                 addressDto.getstate(),
-                addressDto.getzipcode() // ✅ matches DTO
+                addressDto.getzipcode()
         );
     }
 }
