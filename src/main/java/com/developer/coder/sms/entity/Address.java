@@ -15,7 +15,6 @@ public class Address {
     private String state;
     private String zip;
 
-    // Optional bi-directional back-link; hide from JSON to avoid recursion
     @OneToOne(mappedBy = "address")
     private Student student;
     public Address() {

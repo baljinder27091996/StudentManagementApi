@@ -13,7 +13,7 @@ public class AddressMapper {
                 address.getStreet(),
                 address.getCity(),
                 address.getState(),
-                address.getZip() // ✅ matches entity
+                address.getZip()
         );
     }
 
@@ -22,10 +22,10 @@ public class AddressMapper {
             return null;
         }
         return new Address(
-                addressDto.getstreet(),
-                addressDto.getcity(),
-                addressDto.getstate(),
-                addressDto.getzipcode() // ✅ matches DTO
+                addressDto.getStreet(),
+                addressDto.getCity(),
+                addressDto.getState(),
+                addressDto.getZipcode()
         );
     }
 }

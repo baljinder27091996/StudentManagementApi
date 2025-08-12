@@ -2,6 +2,7 @@ package com.developer.coder.sms.service.impl;
 
 import com.developer.coder.sms.dto.Addressdto;
 import com.developer.coder.sms.entity.Address;
+import com.developer.coder.sms.exception.ResourceNotFoundException;
 import com.developer.coder.sms.repository.AddressRepository;
 import com.developer.coder.sms.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public Address createAddress(Addressdto addressDTO) {
         Address address = new Address(
-                addressDTO.getstreet(),
-                addressDTO.getcity(),
-                addressDTO.getstate(),
-                addressDTO.getzipcode()
+                addressDTO.getStreet(),
+                addressDTO.getCity(),
+                addressDTO.getState(),
+                addressDTO.getZipcode()
         );
         return addressRepository.save(address);
     }
@@ -34,30 +35,29 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Optional<Address> getAddressById(Integer id) {
-        return addressRepository.findById(id);
+        return addressRepository.findById(id)
+                .map(Optional::of)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found with id: " + id));
     }
 
     @Override
     public Address updateAddress(Integer id, Addressdto addressDTO) {
-        Optional<Address> optionalAddress = addressRepository.findById(id);
-        if (optionalAddress.isPresent()) {
-            Address address = optionalAddress.get();
-            address.setStreet(addressDTO.getstreet());
-            address.setCity(addressDTO.getcity());
-            address.setState(addressDTO.getstate());
-            address.setZip(addressDTO.getzipcode());
-            return addressRepository.save(address);
-        } else {
-            throw new RuntimeException("Address not found with id: " + id);
-        }
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Address not found with id: " + id));
+
+        address.setStreet(addressDTO.getStreet());
+        address.setCity(addressDTO.getCity());
+        address.setState(addressDTO.getState());
+        address.setZip(addressDTO.getZipcode());
+
+        return addressRepository.save(address);
     }
 
     @Override
     public void deleteAddress(Integer id) {
-        if (addressRepository.existsById(id)) {
-            addressRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Address not found with id: " + id);
+        if (!addressRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Address not found with id: " + id);
         }
+        addressRepository.deleteById(id);
     }
 }

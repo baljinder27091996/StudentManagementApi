@@ -11,10 +11,10 @@ public class StudentMapper {
         }
         return new Studentdto(
                 student.getId(),
-                student.getRollNumber(),
+                student.getRollNumber(), // ensure naming matches Student entity
                 student.getName(),
                 student.getClassName(),
-                AddressMapper.mapToAddressDto(student.getAddress()) // ✅ include address
+                AddressMapper.mapToAddressDto(student.getAddress())
         );
     }
 
@@ -24,10 +24,10 @@ public class StudentMapper {
         }
         return new Student(
                 studentdto.getId(),
-                studentdto.getRollNo(),
+                studentdto.getRollNo(), // matches DTO field
                 studentdto.getName(),
-                studentdto.getClassname(),
-                AddressMapper.mapToAddress(studentdto.getAddress()) // ✅ include address
+                studentdto.getClassname(), // fixed getter name
+                AddressMapper.mapToAddress(studentdto.getAddress())
         );
     }
 }
