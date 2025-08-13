@@ -2,7 +2,6 @@
 package com.developer.coder.sms.exception;
 
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -20,5 +19,4 @@ public class ErrorMessage {
         this.description = description;
     }
 
-    // Getters and Setters (or use Lombok)
 }
