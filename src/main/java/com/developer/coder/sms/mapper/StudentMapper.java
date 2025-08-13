@@ -9,25 +9,25 @@ public class StudentMapper {
         if (student == null) {
             return null;
         }
-        return new Studentdto(
-                student.getId(),
-                student.getRollNumber(), // ensure naming matches Student entity
-                student.getName(),
-                student.getClassName(),
-                AddressMapper.mapToAddressDto(student.getAddress())
-        );
+        return Studentdto.builder()
+                .id(student.getId())
+                .rollNo(student.getRollNumber()) // matches entity field
+                .name(student.getName())
+                .classname(student.getClassName())
+                .address(AddressMapper.mapToAddressDto(student.getAddress()))
+                .build();
     }
 
     public static Student mapToStudent(Studentdto studentdto) {
         if (studentdto == null) {
             return null;
         }
-        return new Student(
-                studentdto.getId(),
-                studentdto.getRollNo(), // matches DTO field
-                studentdto.getName(),
-                studentdto.getClassname(), // fixed getter name
-                AddressMapper.mapToAddress(studentdto.getAddress())
-        );
+        return Student.builder()
+                .id(studentdto.getId())
+                .rollNumber(studentdto.getRollNo()) // matches DTO field
+                .name(studentdto.getName())
+                .className(studentdto.getClassname()) // fixed getter name
+                .address(AddressMapper.mapToAddress(studentdto.getAddress()))
+                .build();
     }
 }

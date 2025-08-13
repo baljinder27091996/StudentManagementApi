@@ -1,7 +1,9 @@
 package com.developer.coder.sms.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
+@Builder
 @Entity
 @Table(name = "address")
 public class Address {

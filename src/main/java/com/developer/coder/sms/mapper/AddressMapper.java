@@ -9,23 +9,23 @@ public class AddressMapper {
         if (address == null) {
             return null;
         }
-        return new Addressdto(
-                address.getStreet(),
-                address.getCity(),
-                address.getState(),
-                address.getZip()
-        );
+        return Addressdto.builder()
+                .street(address.getStreet())
+                .city(address.getCity())
+                .state(address.getState())
+                .zipcode(address.getZip())
+                .build();
     }
 
     public static Address mapToAddress(Addressdto addressDto) {
         if (addressDto == null) {
             return null;
         }
-        return new Address(
-                addressDto.getStreet(),
-                addressDto.getCity(),
-                addressDto.getState(),
-                addressDto.getZipcode()
-        );
+        return Address.builder()
+                .street(addressDto.getStreet())
+                .city(addressDto.getCity())
+                .state(addressDto.getState())
+                .zip(addressDto.getZipcode())
+                .build();
     }
 }

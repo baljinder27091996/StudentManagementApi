@@ -1,7 +1,9 @@
 package com.developer.coder.sms.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 
+@Builder
 public class Addressdto {
 
     @NotBlank(message = "Street is required")
@@ -16,10 +18,7 @@ public class Addressdto {
     @NotBlank(message = "Zipcode is required")
     private String zipcode;
 
-    // No-args constructor
     public Addressdto() {}
-
-    // All-args constructor
     public Addressdto(String street, String city, String state, String zipcode) {
         this.street = street;
         this.city = city;
@@ -44,7 +43,6 @@ public class Addressdto {
         return zipcode;
     }
 
-    // Setters
     public void setStreet(String street) {
         this.street = street;
     }
@@ -61,7 +59,6 @@ public class Addressdto {
         this.zipcode = zipcode;
     }
 
-    // toString
     @Override
     public String toString() {
         return "Addressdto{" +
