@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    public static final String title = "Student management System";
+    public static final String title = "Library";
     public static final String description = "by Enakshi";
     public static final String version = "0.1";
     public static final String termsOfServiceUrl = "https://tuespotsolution.com";
